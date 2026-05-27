@@ -5,6 +5,13 @@ Welcome to **AuraBite**, a premium, high-fidelity full-stack single-page restaur
 
 ---
 
+## 💻 GitHub Repository & Production Source
+- **Official Repository**: [github.com/Sarbjeetjk/aura_bite](https://github.com/Sarbjeetjk/aura_bite)
+- **Primary Branch**: `main`
+- **Remote Origin**: `https://github.com/Sarbjeetjk/aura_bite.git`
+
+---
+
 ## 🛠️ Technology Stack Used
 
 | Layer | Technologies & Libraries | Key Purposes & Roles |
@@ -13,7 +20,7 @@ Welcome to **AuraBite**, a premium, high-fidelity full-stack single-page restaur
 | **State Managers** | **React Context API** | Unified auth session context, cart addition safety checks, and visual theme persistence. |
 | **Frontend Styling** | **Vanilla CSS**, **FontAwesome Icons** | Curved custom border radiuses, soft glow glassmorphisms, CSS variables dark/light switching. |
 | **API Client** | **Axios**, **Socket.io Client** | Secure REST data operations and instant bi-directional Websockets channels sync. |
-| **Backend Core** | **Node.js**, **Express.js**, **Socket.io Server** | High-throughput REST API controllers, JWT/RBAC gatekeepers, live orders pipeline. |
+| **Backend Core** | **Node.js**, **Express.js (10MB Limit)**, **Socket.io Server** | High-throughput REST API controllers, JWT/RBAC gatekeepers, live orders pipeline. |
 | **Database ODM** | **MongoDB**, **Mongoose** | Strict model schema validations, dynamic pre-save review averages and count aggregates. |
 | **Zero-Config DB** | **MongoDB Memory Server** | High-fidelity automatic in-memory MongoDB fallback server if local databases are unavailable. |
 | **Security & Auth** | **JWT (JSON Web Tokens)**, **bcryptjs** | Dynamic credential hashing, cryptographically signed cookies, secure access gates. |
@@ -22,6 +29,7 @@ Welcome to **AuraBite**, a premium, high-fidelity full-stack single-page restaur
 
 ## 🌟 Visual Core & Design Language
 - **Dual Persisted Themes**: A space-chasm dark theme with dynamic golden amber accents, and a cream-ivory light theme (`#f8f6f0`) with dark stone-charcoal typography, fully bound to `localStorage`.
+- **Gourmet Ambient Hero Image Background**: The home page search banner background is styled with a gorgeous dining restaurant photo (`/hero-bg.jpg`) overlaid with a dark glassmorphic gradient for optimal text contrast and readability in both themes.
 - **Premium Glassmorphic Design**: Utilizes soft multi-layered shadows, elegant container borders, and frosted glass backdrops (`backdrop-filter`) built on vanilla CSS.
 - **Scroll Restoration**: Route changes automatically reset scroll offsets to `(0, 0)`, preventing frustrating bottom-snapping when browsing menus, reviews, or logging in.
 
@@ -40,7 +48,12 @@ Welcome to **AuraBite**, a premium, high-fidelity full-stack single-page restaur
 
 ### 💼 2. Seller Restaurant Console
 * **Real-time Order Alerts**: Live incoming order tickets with immediate audio alert prompts and desktop notifications.
-* **Culinary Menu CRUD Workspace**: Create, read, update, or delete menu items, pricing, availability toggles, and dishes image placeholders.
+* **Hybrid Image Uploader (Dishes & Cover Showcase)**:
+  * Replaced static text inputs with an interactive hybrid uploader component.
+  * Sellers can **paste standard Image URLs** or **directly upload local JPEG, JPG, and PNG files** (up to 5MB).
+  * Uploaded images are encoded to high-fidelity Base64 Data URIs via `FileReader` in the browser and updated seamlessly inside the 10MB-supported backend.
+  * Renders a real-time thumbnail image loading preview with a clearing trigger before saving.
+* **Culinary Menu CRUD Workspace**: Create, read, update, or delete menu items, pricing, availability toggles, and categories.
 * **Storefront Customizer**: Modify store descriptions, cuisine profiles, and operational hours.
 
 ### 🛡️ 3. Master Administrator Command Center
@@ -53,7 +66,7 @@ Welcome to **AuraBite**, a premium, high-fidelity full-stack single-page restaur
 
 ## 👥 Demo Credentials & Profiles
 
-Use the following seeded accounts to test all three panels:
+Use the following seeded accounts (currently populated in your cloud Atlas database) to test all three panels:
 
 | Portal Panel | User Role | Seed Email Address | Password | Key Functionality |
 | :--- | :--- | :--- | :--- | :--- |
@@ -70,7 +83,7 @@ AuraBite is a decoupled full-stack monorepo consisting of a Node/Express backend
 
 ### 📋 Prerequisites
 - **Node.js** (v16.x or newer) and **npm** installed.
-- **MongoDB** running locally on default port `27017` *(Optional: The server features an automatic In-Memory Database Server fallback if no external DB is found, allowing it to work entirely out of the box!)*
+- **MongoDB Atlas** configuration is already established inside [backend/.env](file:///d:/project_/backend/.env) pointing directly to your remote live database clusters!
 
 ---
 
@@ -130,6 +143,6 @@ To run the automated tests:
 
 ## 📞 Support & Inquiries
 For platform feedback, demo assistance, or custom enquiries, reach out to the Gourmet Support team:
-- **Email**: [neeraj@aurabite.com](mailto:neeraj@aurabite.com)
-- **Phone**: `+91 98****4536`
+- **Email**: [Sarbjeet@aurabite.com](mailto:Sarbjeet@aurabite.com)
+- **Phone**: `+91 76****5919`
 - **Portal**: Access the online ticket system at `/enquiry` in your browser.
