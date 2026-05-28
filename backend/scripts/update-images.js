@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const path = require('path');
 const Restaurant = require('../models/Restaurant');
+const MenuItem = require('../models/MenuItem');
 
 // Load environment variables
 dotenv.config({ path: path.join(__dirname, '../.env') });
@@ -33,11 +34,29 @@ const updateRestaurants = async () => {
     console.log(`Found ${restaurants.length} restaurants to update.`);
 
     for (let restaurant of restaurants) {
-      // Pick 2 random unique images from sampleImages
-      const shuffled = [...sampleImages].sort(() => 0.5 - Math.random());
-      const selectedSamples = shuffled.slice(0, 2);
+      // Find menu items belonging to this restaurant
+      const menuItems = await MenuItem.find({ restaurantId: restaurant._id });
+      
+      let selectedSamples = [];
+      if (menuItems.length > 0) {
+        // Extract unique, valid image URLs from menu items
+        const itemImages = menuItems.map(item => item.imageUrl).filter(Boolean);
+        const uniqueImages = [...new Set(itemImages)];
+        
+        // Shuffle the unique images
+        const shuffled = uniqueImages.sort(() => 0.5 - Math.random());
+        // Randomly pick 2 or 3 images
+        const count = Math.min(shuffled.length, Math.floor(Math.random() * 2) + 2); // 2 or 3 images
+        selectedSamples = shuffled.slice(0, count);
+      }
 
-      // Construct images array: original imageUrl as cover slide + 2 sample slides
+      // Fallback to sampleImages if no menu items or menu item images exist
+      if (selectedSamples.length === 0) {
+        const shuffled = [...sampleImages].sort(() => 0.5 - Math.random());
+        selectedSamples = shuffled.slice(0, 2);
+      }
+
+      // Construct images array: original imageUrl as cover slide + the dynamically chosen menu item images
       const galleryImages = [
         restaurant.imageUrl || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&auto=format&fit=crop&q=60',
         ...selectedSamples
@@ -45,7 +64,7 @@ const updateRestaurants = async () => {
 
       restaurant.images = galleryImages;
       await restaurant.save();
-      console.log(`Updated images for restaurant: "${restaurant.name}"`);
+      console.log(`Updated images for restaurant: "${restaurant.name}" with ${selectedSamples.length} menu item images.`);
     }
 
     console.log('All restaurants updated successfully!');
@@ -57,3 +76,4 @@ const updateRestaurants = async () => {
 };
 
 updateRestaurants();
+

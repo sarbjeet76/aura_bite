@@ -727,6 +727,41 @@ const seedData = async () => {
     const seededMenuItems = await MenuItem.insertMany(menuItems);
     console.log('Categorized Menu Items seeded successfully.');
 
+    // 4.5 Assign 2-3 random menu item image URLs to each restaurant's gallery
+    console.log('Assigning menu item images to restaurant galleries...');
+    for (let rest of seededRestaurants) {
+      const restMenuItems = seededMenuItems.filter(
+        (item) => item.restaurantId.toString() === rest._id.toString()
+      );
+
+      let selectedSamples = [];
+      if (restMenuItems.length > 0) {
+        const itemImages = restMenuItems.map((item) => item.imageUrl).filter(Boolean);
+        const uniqueImages = [...new Set(itemImages)];
+
+        // Shuffle the unique images
+        const shuffled = uniqueImages.sort(() => 0.5 - Math.random());
+        // Pick 2 or 3 images
+        const count = Math.min(shuffled.length, Math.floor(Math.random() * 2) + 2); // 2 or 3 images
+        selectedSamples = shuffled.slice(0, count);
+      }
+
+      // Fallback if no menu items or menu item images are present
+      if (selectedSamples.length === 0) {
+        selectedSamples = [
+          'https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800&auto=format&fit=crop&q=60',
+          'https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?w=800&auto=format&fit=crop&q=60',
+        ];
+      }
+
+      rest.images = [
+        rest.imageUrl || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&auto=format&fit=crop&q=60',
+        ...selectedSamples
+      ];
+      await rest.save();
+      console.log(`Assigned ${selectedSamples.length} menu item images to restaurant: "${rest.name}" gallery.`);
+    }
+
     // 5. Seed Reviews (will trigger stats aggregation hooks)
     const reviews = [
       {

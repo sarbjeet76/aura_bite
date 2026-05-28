@@ -311,7 +311,7 @@ const Home = () => {
                     gap: '0.5rem'
                   }}>
                     <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)' }}>{restaurant.name}</h3>
-                    
+
                     {/* Star Rating Badge */}
                     <div style={{
                       display: 'flex',
