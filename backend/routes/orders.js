@@ -21,7 +21,7 @@ router.post('/', protect, async (req, res) => {
       return res.status(400).json({ success: false, message: 'Please specify a structured delivery address.' });
     }
 
-    const { street, city, state, pincode } = deliveryAddress;
+    const { street, city, state, pincode, phone } = deliveryAddress;
     if (!street || !street.trim() || !city || !city.trim() || !state || !state.trim() || !pincode || !pincode.trim()) {
       return res.status(400).json({ success: false, message: 'Please fill in all required delivery address fields (Street, City, State, Pincode).' });
     }
@@ -74,7 +74,8 @@ router.post('/', protect, async (req, res) => {
         city,
         state,
         pincode,
-        landmark: deliveryAddress.landmark || ''
+        landmark: deliveryAddress.landmark || '',
+        phone: phone || ''
       },
       paymentMethod: paymentMethod || 'Cash on Delivery'
     });
@@ -119,13 +120,13 @@ router.get('/', protect, async (req, res) => {
         return res.json({ success: true, data: [], message: 'Seller does not have a restaurant associated yet.' });
       }
       orders = await Order.find({ restaurantId: req.user.restaurantId })
-        .populate('userId', 'username email')
+        .populate('userId', 'username email phoneNumber')
         .populate('restaurantId', 'name')
         .sort({ createdAt: -1 });
     } else if (req.user.role === 'admin') {
       // Admins get ALL orders
       orders = await Order.find({})
-        .populate('userId', 'username email')
+        .populate('userId', 'username email phoneNumber')
         .populate('restaurantId', 'name')
         .sort({ createdAt: -1 });
     }

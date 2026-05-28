@@ -190,7 +190,7 @@ const SellerOrders = () => {
                   </p>
                   <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
                     <i className="fa-solid fa-location-dot" style={{ color: 'var(--accent-gold)', marginRight: '0.4rem' }}></i>
-                    <strong>Deliver To:</strong> {order.deliveryAddress ? `${order.deliveryAddress.street}, ${order.deliveryAddress.city}, ${order.deliveryAddress.state} - ${order.deliveryAddress.pincode}${order.deliveryAddress.landmark ? ` (Landmark: ${order.deliveryAddress.landmark})` : ''}` : 'N/A'}
+                    <strong>Deliver To:</strong> {order.deliveryAddress ? `${order.deliveryAddress.street}, ${order.deliveryAddress.city}, ${order.deliveryAddress.state} - ${order.deliveryAddress.pincode}${order.deliveryAddress.landmark ? ` (Landmark: ${order.deliveryAddress.landmark})` : ''} | 📞 Phone: ${order.deliveryAddress.phone || order.userId?.phoneNumber || 'N/A'}` : 'N/A'}
                   </p>
                   <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>
                     <i className="fa-solid fa-credit-card" style={{ color: 'var(--accent-gold)', marginRight: '0.4rem' }}></i>

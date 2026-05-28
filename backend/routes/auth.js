@@ -15,7 +15,7 @@ const generateToken = (id) => {
 // @route   POST /api/auth/register
 // @access  Public
 router.post('/register', async (req, res) => {
-  const { username, email, password, role } = req.body;
+  const { username, email, password, role, phoneNumber } = req.body;
 
   try {
     // Check if user already exists
@@ -29,7 +29,8 @@ router.post('/register', async (req, res) => {
       username,
       email,
       password,
-      role: role || 'customer'
+      role: role || 'customer',
+      phoneNumber: phoneNumber || ''
     });
 
     if (user) {
@@ -40,6 +41,7 @@ router.post('/register', async (req, res) => {
         email: user.email,
         role: user.role,
         restaurantId: user.restaurantId,
+        phoneNumber: user.phoneNumber,
         token: generateToken(user._id)
       });
     } else {
@@ -69,6 +71,7 @@ router.post('/login', async (req, res) => {
         email: user.email,
         role: user.role,
         restaurantId: user.restaurantId,
+        phoneNumber: user.phoneNumber || '',
         token: generateToken(user._id)
       });
     } else {
@@ -93,7 +96,8 @@ router.get('/me', protect, async (req, res) => {
         username: user.username,
         email: user.email,
         role: user.role,
-        restaurantId: user.restaurantId
+        restaurantId: user.restaurantId,
+        phoneNumber: user.phoneNumber || ''
       });
     } else {
       res.status(404).json({ success: false, message: 'User not found' });

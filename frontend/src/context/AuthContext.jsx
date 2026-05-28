@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const register = async (username, email, password, role) => {
+  const register = async (username, email, password, role, phoneNumber) => {
     setLoading(true);
     setError(null);
     try {
@@ -86,7 +86,8 @@ export const AuthProvider = ({ children }) => {
         username,
         email,
         password,
-        role
+        role,
+        phoneNumber
       });
       if (res.data.success) {
         const userData = res.data;

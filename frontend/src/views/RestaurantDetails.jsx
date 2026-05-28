@@ -15,6 +15,10 @@ const RestaurantDetails = () => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Gallery slideshow carousel states
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
   // Review Form States
   const [newRating, setNewRating] = useState(5);
   const [newComment, setNewComment] = useState('');
@@ -46,6 +50,20 @@ const RestaurantDetails = () => {
     window.scrollTo(0, 0);
     fetchDetails();
   }, [id]);
+
+  const gallery = restaurant?.images && restaurant.images.length > 0 
+    ? restaurant.images 
+    : [restaurant?.imageUrl || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=60'];
+
+  useEffect(() => {
+    if (gallery.length <= 1 || isPaused) return;
+
+    const interval = setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % gallery.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [gallery, isPaused]);
 
   const handleAddToCart = (item) => {
     if (!user) {
@@ -212,20 +230,125 @@ const RestaurantDetails = () => {
           gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
           gap: '2rem'
         }}>
-          {/* Cover image */}
-          <div style={{ height: '350px' }}>
-            <img 
-              src={restaurant.imageUrl} 
-              alt={restaurant.name} 
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover'
-              }} 
-              onError={(e) => {
-                e.target.src = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=60';
-              }}
-            />
+          {/* Cover image slider */}
+          <div 
+            style={{ height: '350px', position: 'relative', overflow: 'hidden' }}
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+          >
+            {gallery.map((img, index) => (
+              <img 
+                key={index}
+                src={img} 
+                alt={`${restaurant.name} Slide ${index + 1}`} 
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  opacity: index === activeSlide ? 1 : 0,
+                  transition: 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+                  zIndex: index === activeSlide ? 1 : 0
+                }} 
+                onError={(e) => {
+                  e.target.src = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=60';
+                }}
+              />
+            ))}
+
+            {/* Slider arrows overlay navigation controls */}
+            {gallery.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setActiveSlide((prev) => (prev - 1 + gallery.length) % gallery.length)}
+                  style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '1rem',
+                    transform: 'translateY(-50%)',
+                    background: 'rgba(0, 0, 0, 0.4)',
+                    backdropFilter: 'blur(4px)',
+                    border: '1px solid var(--border-glass)',
+                    color: '#fff',
+                    width: '38px',
+                    height: '38px',
+                    borderRadius: '50%',
+                    cursor: 'pointer',
+                    zIndex: 2,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transition: 'all 0.25s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'var(--accent-gold)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(0, 0, 0, 0.4)'}
+                >
+                  <i className="fa-solid fa-chevron-left" style={{ fontSize: '0.9rem', color: '#000' }}></i>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveSlide((prev) => (prev + 1) % gallery.length)}
+                  style={{
+                    position: 'absolute',
+                    top: '50%',
+                    right: '1rem',
+                    transform: 'translateY(-50%)',
+                    background: 'rgba(0, 0, 0, 0.4)',
+                    backdropFilter: 'blur(4px)',
+                    border: '1px solid var(--border-glass)',
+                    color: '#fff',
+                    width: '38px',
+                    height: '38px',
+                    borderRadius: '50%',
+                    cursor: 'pointer',
+                    zIndex: 2,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transition: 'all 0.25s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'var(--accent-gold)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(0, 0, 0, 0.4)'}
+                >
+                  <i className="fa-solid fa-chevron-right" style={{ fontSize: '0.9rem', color: '#000' }}></i>
+                </button>
+              </>
+            )}
+
+            {/* Slider bottom dots pagination ledger */}
+            {gallery.length > 1 && (
+              <div style={{
+                position: 'absolute',
+                bottom: '1rem',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                zIndex: 2,
+                display: 'flex',
+                gap: '0.5rem',
+                background: 'rgba(0, 0, 0, 0.5)',
+                padding: '0.4rem 0.8rem',
+                borderRadius: '20px',
+                backdropFilter: 'blur(4px)',
+                border: '1px solid var(--border-glass)'
+              }}>
+                {gallery.map((_, idx) => (
+                  <span
+                    key={idx}
+                    onClick={() => setActiveSlide(idx)}
+                    style={{
+                      width: '8px',
+                      height: '8px',
+                      borderRadius: '50%',
+                      background: idx === activeSlide ? 'var(--accent-gold)' : 'rgba(255, 255, 255, 0.4)',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s'
+                    }}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Details header info */}

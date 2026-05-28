@@ -8,6 +8,7 @@ const Auth = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [role, setRole] = useState('customer'); // default
   const [formError, setFormError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -33,8 +34,14 @@ const Auth = () => {
     setIsSubmitting(true);
 
     // Validation
-    if (!email || !password || (!isLogin && !username)) {
+    if (!email || !password || (!isLogin && (!username || !phoneNumber))) {
       setFormError('Please fill in all required fields.');
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!isLogin && !/^[0-9+\-\s()]{8,20}$/.test(phoneNumber)) {
+      setFormError('Please enter a valid phone number (at least 8 digits).');
       setIsSubmitting(false);
       return;
     }
@@ -49,7 +56,7 @@ const Auth = () => {
       if (isLogin) {
         await login(email, password);
       } else {
-        await register(username, email, password, role);
+        await register(username, email, password, role, phoneNumber);
       }
       navigate('/');
     } catch (err) {
@@ -64,6 +71,7 @@ const Auth = () => {
     setUsername('');
     setEmail('');
     setPassword('');
+    setPhoneNumber('');
     setRole('customer');
     setFormError('');
   };
@@ -152,17 +160,31 @@ const Auth = () => {
         {/* Input Form */}
         <form onSubmit={handleSubmit}>
           {!isLogin && (
-            <div className="form-group">
-              <label htmlFor="username">Username</label>
-              <input
-                id="username"
-                type="text"
-                className="form-input"
-                placeholder="e.g. foodlover99"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-            </div>
+            <>
+              <div className="form-group">
+                <label htmlFor="username">Username</label>
+                <input
+                  id="username"
+                  type="text"
+                  className="form-input"
+                  placeholder="e.g. foodlover99"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="phoneNumber">Contact Phone Number</label>
+                <input
+                  id="phoneNumber"
+                  type="tel"
+                  className="form-input"
+                  placeholder="e.g. +91 98765 43210"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                />
+              </div>
+            </>
           )}
 
           <div className="form-group">

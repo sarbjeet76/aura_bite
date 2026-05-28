@@ -8,7 +8,8 @@ const connectDB = async () => {
     const customUri = process.env.MONGODB_URI;
     
     if (customUri) {
-      console.log('Attempting to connect to MONGODB_URI provided in .env...');
+      const redactedUri = customUri.replace(/:([^@/]+)@/, ':****@');
+      console.log(`Attempting to connect to MONGODB_URI: ${redactedUri}`);
       await mongoose.connect(customUri);
       console.log('Successfully connected to MongoDB.');
     } else {

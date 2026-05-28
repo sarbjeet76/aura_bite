@@ -33,6 +33,10 @@ const UserSchema = new mongoose.Schema({
     ref: 'Restaurant',
     default: null
   },
+  phoneNumber: {
+    type: String,
+    default: ''
+  },
   createdAt: {
     type: Date,
     default: Date.now

@@ -28,6 +28,10 @@ const RestaurantSchema = new mongoose.Schema({
     type: String,
     default: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&auto=format&fit=crop&q=60'
   },
+  images: {
+    type: [String],
+    default: []
+  },
   rating: {
     type: Number,
     default: 0

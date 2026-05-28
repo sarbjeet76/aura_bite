@@ -9,6 +9,17 @@ const Home = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCuisine, setSelectedCuisine] = useState('All');
 
+  // Home Hero Slider States
+  const [heroIndex, setHeroIndex] = useState(0);
+  const heroImages = ['/hero-bg.jpg', '/hero1.jpg', '/hero2.jpg', '/hero3.jpg'];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setHeroIndex((prev) => (prev + 1) % heroImages.length);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, []);
+
   // Fetch restaurants
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -58,15 +69,30 @@ const Home = () => {
         margin: '2rem auto 3rem auto',
         maxWidth: '1280px',
         padding: '5.5rem 3rem',
-        backgroundImage: 'linear-gradient(rgba(9, 12, 21, 0.7), rgba(9, 12, 21, 0.85)), url("/hero-bg.jpg")',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center 40%',
         border: '1px solid var(--border-glass)',
         borderRadius: 'var(--radius-lg)',
         position: 'relative',
         overflow: 'hidden',
         boxShadow: 'var(--shadow-glow)'
       }}>
+        {/* Sliding Background Images */}
+        {heroImages.map((img, index) => (
+          <div
+            key={index}
+            style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundImage: `linear-gradient(rgba(9, 12, 21, 0.75), rgba(9, 12, 21, 0.88)), url("${img}")`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              opacity: index === heroIndex ? 1 : 0,
+              transition: 'opacity 0.4s ease-in-out',
+              zIndex: 0,
+              pointerEvents: 'none'
+            }}
+          />
+        ))}
+
         {/* Glow Ambient Lights */}
         <div style={{
           position: 'absolute',
@@ -75,7 +101,8 @@ const Home = () => {
           width: '300px',
           height: '300px',
           background: 'radial-gradient(circle, var(--accent-gold-glow) 0%, transparent 70%)',
-          pointerEvents: 'none'
+          pointerEvents: 'none',
+          zIndex: 0
         }} />
         <div style={{
           position: 'absolute',
@@ -84,7 +111,8 @@ const Home = () => {
           width: '300px',
           height: '300px',
           background: 'radial-gradient(circle, var(--accent-coral-glow) 0%, transparent 70%)',
-          pointerEvents: 'none'
+          pointerEvents: 'none',
+          zIndex: 0
         }} />
 
         <div style={{ maxWidth: '700px', position: 'relative', zIndex: 1 }}>

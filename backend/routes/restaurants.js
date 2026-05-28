@@ -55,7 +55,7 @@ router.get('/:id', async (req, res) => {
 // @access  Private (Seller/Admin)
 router.post('/', protect, authorize('seller', 'admin'), async (req, res) => {
   try {
-    const { name, cuisineType, address, openingHours, description, imageUrl } = req.body;
+    const { name, cuisineType, address, openingHours, description, imageUrl, images } = req.body;
 
     // Check if seller already has a restaurant
     if (req.user.role === 'seller' && req.user.restaurantId) {
@@ -69,6 +69,7 @@ router.post('/', protect, authorize('seller', 'admin'), async (req, res) => {
       openingHours,
       description,
       imageUrl,
+      images: images || [],
       sellerId: req.user.id
     });
 

@@ -421,7 +421,7 @@ const AdminDashboard = () => {
                     </p>
                     <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '0.25rem' }}>
                       <i className="fa-solid fa-location-dot" style={{ color: 'var(--accent-gold)', marginRight: '0.3rem' }}></i>
-                      Dest: {order.deliveryAddress ? `${order.deliveryAddress.street}, ${order.deliveryAddress.city}, ${order.deliveryAddress.state}` : 'N/A'} | Pay: {order.paymentMethod || 'COD'}
+                      Dest: {order.deliveryAddress ? `${order.deliveryAddress.street}, ${order.deliveryAddress.city}, ${order.deliveryAddress.state}` : 'N/A'} | Phone: {order.deliveryAddress?.phone || order.userId?.phoneNumber || 'N/A'} | Pay: {order.paymentMethod || 'COD'}
                     </p>
                   </div>
 

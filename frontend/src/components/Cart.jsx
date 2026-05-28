@@ -15,6 +15,7 @@ const Cart = ({ isOpen, onClose }) => {
   const [stateName, setStateName] = useState('Delhi');
   const [pincode, setPincode] = useState('110001');
   const [landmark, setLandmark] = useState('Near Food Plaza');
+  const [phone, setPhone] = useState(user?.phoneNumber || '');
 
   // Payment Method States
   const [paymentMethod, setPaymentMethod] = useState('Cash on Delivery');
@@ -24,6 +25,12 @@ const Cart = ({ isOpen, onClose }) => {
 
   const [successOrder, setSuccessOrder] = useState(null);
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (user?.phoneNumber && !phone) {
+      setPhone(user.phoneNumber);
+    }
+  }, [user]);
 
   if (!isOpen) return null;
 
@@ -35,8 +42,8 @@ const Cart = ({ isOpen, onClose }) => {
       return;
     }
 
-    if (!street.trim() || !city.trim() || !stateName.trim() || !pincode.trim()) {
-      alert('Please fill out all required address fields (Street, City, State, Pincode).');
+    if (!street.trim() || !city.trim() || !stateName.trim() || !pincode.trim() || !phone.trim()) {
+      alert('Please fill out all required address fields (Street, City, State, Pincode, Phone).');
       return;
     }
 
@@ -62,7 +69,8 @@ const Cart = ({ isOpen, onClose }) => {
           city,
           state: stateName,
           pincode,
-          landmark
+          landmark,
+          phone
         },
         paymentMethod
       });
@@ -363,6 +371,15 @@ const Cart = ({ isOpen, onClose }) => {
                           style={{ fontSize: '0.8rem', padding: '0.4rem 0.6rem' }}
                         />
                       </div>
+
+                      <input
+                        type="text"
+                        placeholder="Contact Phone Number"
+                        className="form-input"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        style={{ fontSize: '0.8rem', padding: '0.4rem 0.6rem' }}
+                      />
                     </div>
                   </div>
 

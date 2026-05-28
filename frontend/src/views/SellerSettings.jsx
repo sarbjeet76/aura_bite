@@ -17,6 +17,11 @@ const SellerSettings = () => {
   const [imageUrl, setImageUrl] = useState('');
   const [imageSourceType, setImageSourceType] = useState('url'); // 'url' or 'file'
 
+  // Slidebar images gallery states
+  const [images, setImages] = useState([]);
+  const [newImage, setNewImage] = useState('');
+  const [newImageSourceType, setNewImageSourceType] = useState('url');
+
   const [formError, setFormError] = useState('');
   const [formSuccess, setFormSuccess] = useState('');
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -33,6 +38,54 @@ const SellerSettings = () => {
     const reader = new FileReader();
     reader.onloadend = () => {
       setImageUrl(reader.result);
+    };
+    reader.onerror = () => {
+      setFormError('Failed to read image file.');
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleAddGalleryImage = () => {
+    if (!newImage.trim()) return;
+    if (images.length >= 10) {
+      setFormError('Maximum of 10 gallery images allowed.');
+      return;
+    }
+    setImages([...images, newImage.trim()]);
+    setNewImage('');
+  };
+
+  const handleRemoveGalleryImage = (indexToRemove) => {
+    setImages(images.filter((_, idx) => idx !== indexToRemove));
+  };
+
+  const handleMoveGalleryImage = (index, direction) => {
+    const newIndex = index + direction;
+    if (newIndex < 0 || newIndex >= images.length) return;
+    
+    const updatedImages = [...images];
+    const temp = updatedImages[index];
+    updatedImages[index] = updatedImages[newIndex];
+    updatedImages[newIndex] = temp;
+    setImages(updatedImages);
+  };
+
+  const handleGalleryImageFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      setFormError('Image size exceeds the 5MB limit.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      if (images.length >= 10) {
+        setFormError('Maximum of 10 gallery images allowed.');
+        return;
+      }
+      setImages([...images, reader.result]);
     };
     reader.onerror = () => {
       setFormError('Failed to read image file.');
@@ -57,6 +110,7 @@ const SellerSettings = () => {
         setOpeningHours(rest.openingHours);
         setDescription(rest.description);
         setImageUrl(rest.imageUrl);
+        setImages(rest.images || []);
         if (rest.imageUrl && rest.imageUrl.startsWith('data:image')) {
           setImageSourceType('file');
         } else {
@@ -93,7 +147,8 @@ const SellerSettings = () => {
         address,
         openingHours,
         description,
-        imageUrl: imageUrl.trim() || undefined
+        imageUrl: imageUrl.trim() || undefined,
+        images: images
       };
 
       let res;
@@ -388,6 +443,181 @@ const SellerSettings = () => {
                 </button>
               </div>
             )}
+          </div>
+
+          {/* Interactive Slidebar Gallery Images Manager */}
+          <div className="form-group" style={{ marginTop: '2rem', borderTop: '1px solid var(--border-glass)', paddingTop: '2rem' }}>
+            <label style={{ color: 'var(--accent-gold)', fontSize: '1.1rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <i className="fa-solid fa-images"></i>
+              Storefront Slidebar Showcase Photos (Max 10)
+            </label>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '1.25rem' }}>
+              Configure a beautiful photo slideshow to showcase your ambiance, signature dishes, or team! If left empty, it will fall back to displaying your single cover image.
+            </p>
+
+            {/* Grid display of current gallery images */}
+            {images.length > 0 && (
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))',
+                gap: '1rem',
+                marginBottom: '1.5rem',
+                padding: '1rem',
+                background: 'rgba(0,0,0,0.15)',
+                borderRadius: '8px',
+                border: '1px solid var(--border-glass)'
+              }}>
+                {images.map((img, idx) => (
+                  <div key={idx} style={{
+                    position: 'relative',
+                    aspectRatio: '16/10',
+                    borderRadius: '6px',
+                    overflow: 'hidden',
+                    border: '1px solid var(--border-glass)',
+                    display: 'flex',
+                    flexDirection: 'column'
+                  }}>
+                    <img 
+                      src={img} 
+                      alt={`Slide ${idx + 1}`} 
+                      style={{ width: '100%', height: '70%', objectFit: 'cover' }}
+                      onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=150'; }}
+                    />
+                    <div style={{
+                      height: '30%',
+                      background: 'rgba(0,0,0,0.6)',
+                      display: 'flex',
+                      justifyContent: 'space-around',
+                      alignItems: 'center',
+                      padding: '0 0.25rem'
+                    }}>
+                      <button 
+                        type="button" 
+                        onClick={() => handleMoveGalleryImage(idx, -1)}
+                        disabled={idx === 0}
+                        style={{ background: 'none', border: 'none', color: idx === 0 ? 'var(--text-muted)' : 'var(--text-primary)', cursor: idx === 0 ? 'default' : 'pointer', fontSize: '0.75rem' }}
+                      >
+                        <i className="fa-solid fa-arrow-left"></i>
+                      </button>
+                      <button 
+                        type="button" 
+                        onClick={() => handleRemoveGalleryImage(idx)}
+                        style={{ background: 'none', border: 'none', color: 'var(--accent-coral)', cursor: 'pointer', fontSize: '0.75rem' }}
+                      >
+                        <i className="fa-solid fa-trash"></i>
+                      </button>
+                      <button 
+                        type="button" 
+                        onClick={() => handleMoveGalleryImage(idx, 1)}
+                        disabled={idx === images.length - 1}
+                        style={{ background: 'none', border: 'none', color: idx === images.length - 1 ? 'var(--text-muted)' : 'var(--text-primary)', cursor: idx === images.length - 1 ? 'default' : 'pointer', fontSize: '0.75rem' }}
+                      >
+                        <i className="fa-solid fa-arrow-right"></i>
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Form to add a new image to gallery */}
+            <div style={{
+              background: 'rgba(255,255,255,0.02)',
+              border: '1px dashed var(--border-glass)',
+              borderRadius: '8px',
+              padding: '1rem'
+            }}>
+              <label style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '0.5rem', display: 'block' }}>Add New Gallery Photo</label>
+              
+              <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem' }}>
+                <button 
+                  type="button" 
+                  onClick={() => setNewImageSourceType('url')}
+                  style={{
+                    flex: 1,
+                    padding: '0.4rem',
+                    borderRadius: '6px',
+                    fontSize: '0.75rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    background: newImageSourceType === 'url' ? 'var(--accent-gold)' : 'rgba(255,255,255,0.05)',
+                    color: newImageSourceType === 'url' ? '#000' : 'var(--text-secondary)',
+                    border: '1px solid var(--border-glass)',
+                    transition: 'all 0.2s'
+                  }}
+                >
+                  Image URL
+                </button>
+                <button 
+                  type="button" 
+                  onClick={() => setNewImageSourceType('file')}
+                  style={{
+                    flex: 1,
+                    padding: '0.4rem',
+                    borderRadius: '6px',
+                    fontSize: '0.75rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    background: newImageSourceType === 'file' ? 'var(--accent-gold)' : 'rgba(255,255,255,0.05)',
+                    color: newImageSourceType === 'file' ? '#000' : 'var(--text-secondary)',
+                    border: '1px solid var(--border-glass)',
+                    transition: 'all 0.2s'
+                  }}
+                >
+                  Upload JPEG/PNG
+                </button>
+              </div>
+
+              {newImageSourceType === 'url' ? (
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <input
+                    type="url"
+                    className="form-input"
+                    placeholder="https://images.unsplash.com/photo-..."
+                    value={newImage}
+                    onChange={(e) => setNewImage(e.target.value)}
+                    style={{ flexGrow: 1, marginBottom: 0 }}
+                  />
+                  <button 
+                    type="button" 
+                    onClick={handleAddGalleryImage}
+                    className="btn btn-primary"
+                    style={{ padding: '0.5rem 1rem', fontSize: '0.8rem', whiteSpace: 'nowrap' }}
+                  >
+                    Add Slide
+                  </button>
+                </div>
+              ) : (
+                <div style={{ position: 'relative' }}>
+                  <input
+                    id="galleryImageFile"
+                    type="file"
+                    accept="image/jpeg,image/jpg,image/png"
+                    onChange={handleGalleryImageFileUpload}
+                    style={{ display: 'none' }}
+                  />
+                  <label htmlFor="galleryImageFile" style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '1rem',
+                    border: '2px dashed var(--border-glass)',
+                    borderRadius: 'var(--radius-md)',
+                    cursor: 'pointer',
+                    background: 'rgba(0,0,0,0.15)',
+                    color: 'var(--text-secondary)',
+                    textAlign: 'center',
+                    gap: '0.25rem',
+                    transition: 'all 0.2s'
+                  }}>
+                    <i className="fa-solid fa-plus" style={{ fontSize: '1.2rem', color: 'var(--accent-gold)' }}></i>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 500 }}>Select and Add Local JPEG/PNG File</span>
+                    <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>Max size: 5MB</span>
+                  </label>
+                </div>
+              )}
+            </div>
           </div>
 
           <button className="btn btn-primary" type="submit" disabled={submitLoading} style={{
