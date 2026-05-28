@@ -28,9 +28,9 @@ Welcome to **AuraBite**, a premium, high-fidelity full-stack single-page restaur
 ---
 
 ## 🌟 Visual Core & Design Language
-- **Dual Persisted Themes**: A space-chasm dark theme with dynamic golden amber accents, and a cream-ivory light theme (`#f8f6f0`) with dark stone-charcoal typography, fully bound to `localStorage`.
-- **Gourmet Ambient Hero Image Background**: The home page search banner background is styled with a gorgeous dining restaurant photo (`/hero-bg.jpg`) overlaid with a dark glassmorphic gradient for optimal text contrast and readability in both themes.
-- **Premium Glassmorphic Design**: Utilizes soft multi-layered shadows, elegant container borders, and frosted glass backdrops (`backdrop-filter`) built on vanilla CSS.
+- **Persisted Glassmorphic Themes**: A space-chasm dark theme with golden amber accents, and a cream-ivory light theme (`#f8f6f0`) with dark stone-charcoal typography, fully bound to `localStorage`.
+- **Gourmet Ambient Hero Slideshow**: The homepage search banner features a gorgeous, 2-second auto-rotating and cross-fading background slideshow cycling through custom group photos (`/hero-bg.jpg`, `/hero1.jpg`, `/hero2.jpg`, `/hero3.jpg`) overlaid with a dark glassmorphic gradient for optimal readability.
+- **Glassmorphic Storefront Image Slider**: The static restaurant cover photo is replaced with a premium image slideshow that auto-rotates every 5 seconds, pauses on mouse hover, and features interactive overlay arrows and dot pagination.
 - **Scroll Restoration**: Route changes automatically reset scroll offsets to `(0, 0)`, preventing frustrating bottom-snapping when browsing menus, reviews, or logging in.
 
 ---
@@ -39,26 +39,29 @@ Welcome to **AuraBite**, a premium, high-fidelity full-stack single-page restaur
 
 ### 👤 1. Customer Dining Hub
 * **Store Directory**: Interactive restaurant grids categorized with quick-search inputs and cuisine-type tags filtering.
-* **Storefront Detail**: Interactive menu directories categorized by cuisine types (e.g., Starters, Mains, Desserts, Beverages) and responsive checkout carts.
+* **Storefront Detail**: Interactive menu directories categorized by cuisine types (e.g., Starters, Mains, Desserts, Beverages) featuring a **frosted glass image carousel/slider** that cycles through storefront photos with auto-play and manual indicators.
 * **Structured checkout & Simulator**:
-  * Multi-field delivery address input system (Street, City, State, Pincode, and optional Landmark).
+  * Multi-field delivery address input system (Street, City, State, Pincode, optional Landmark, and **Contact Phone Number**).
+  * Auto-fills the checkout form with the customer's registered phone number with manual edit support.
   * Interactive payment method dropdown with a high-fidelity credit/debit card details form simulator.
 * **Critiques Drawer**: Submit, modify, or delete review comments and star ratings. Unauthenticated guest attempts dynamically redirect to the authentication screen and auto-focus the "Sign Up" tab.
-* **Order History Progress Tracker**: Interactive customer ledger showcasing a beautiful horizontal step progress indicator driven by WebSockets.
+* **Order History Progress Tracker**: Interactive customer ledger showcasing a beautiful horizontal step progress indicator showing delivery contact numbers, driven by WebSockets.
 
 ### 💼 2. Seller Restaurant Console
-* **Real-time Order Alerts**: Live incoming order tickets with immediate audio alert prompts and desktop notifications.
+* **Real-time Order Alerts**: Live incoming order tickets showing delivery contact phone numbers, with immediate audio alert prompts and desktop notifications.
 * **Hybrid Image Uploader (Dishes & Cover Showcase)**:
   * Replaced static text inputs with an interactive hybrid uploader component.
   * Sellers can **paste standard Image URLs** or **directly upload local JPEG, JPG, and PNG files** (up to 5MB).
   * Uploaded images are encoded to high-fidelity Base64 Data URIs via `FileReader` in the browser and updated seamlessly inside the 10MB-supported backend.
   * Renders a real-time thumbnail image loading preview with a clearing trigger before saving.
 * **Culinary Menu CRUD Workspace**: Create, read, update, or delete menu items, pricing, availability toggles, and categories.
-* **Storefront Customizer**: Modify store descriptions, cuisine profiles, and operational hours.
+* **Storefront Customizer & Gallery Manager**:
+  * Modify store descriptions, cuisine profiles, and operational hours.
+  * **Interactive Slider Gallery Manager**: Add, delete, and re-arrange up to 10 slidebar showcase photos (both URLs and local JPEG/PNG file uploads up to 5MB) to compile a stunning public storefront slideshow.
 
 ### 🛡️ 3. Master Administrator Command Center
-* **Live Revenue Metrics**: Dynamic card layout tracking **Gross Revenue**, **Active Customers/Sellers**, and **Restaurant Listings count**.
-* **Profile Authority Manager**: Tabular view to inspect registrations, elevate customer accounts to restaurant owners or admins, or delete credentials.
+* **Live Revenue Metrics**: Card layout tracking **Gross Revenue**, **Active Customers/Sellers**, and **Restaurant Listings count**.
+* **Profile Authority Manager**: Tabular view to inspect registrations, view customer **contact phone numbers**, elevate customer accounts to restaurant owners or admins, or delete credentials.
 * **Enquiry Helpdesk Manager**: Administrative tickets portal to read customer/demo contact submissions, update workflow states (`Pending`, `In Progress`, `Resolved`), or purge stale items.
 * **Critiques Moderation Control**: Master review logs to filter out malicious content using a dynamic toggle to **Hide/Unhide** review posts publicly (which dynamically recalculates restaurant ratings) or delete reviews permanently.
 
