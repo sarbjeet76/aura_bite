@@ -6,9 +6,9 @@ Welcome to **AuraBite**, a premium, high-fidelity full-stack single-page restaur
 ---
 
 ## 💻 GitHub Repository & Production Source
-- **Official Repository**: [github.com/Sarbjeetjk/aura_bite](https://github.com/Sarbjeetjk/aura_bite)
+- **Official Repository**: [github.com/sarbjeet76/aura_bite](https://github.com/sarbjeet76/aura_bite)
 - **Primary Branch**: `main`
-- **Remote Origin**: `https://github.com/Sarbjeetjk/aura_bite.git`
+- **Remote Origin**: `https://github.com/sarbjeet76/aura_bite.git`
 
 ---
 
