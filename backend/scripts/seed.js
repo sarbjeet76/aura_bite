@@ -24,7 +24,11 @@ const connectDB = async () => {
     console.log('Database connected for seeding...');
   } catch (err) {
     console.error('Database connection failed for seeding, using temporary fallback:', err.message);
-    process.exit(1);
+    if (require.main === module) {
+      process.exit(1);
+    } else {
+      throw err;
+    }
   }
 };
 
@@ -884,11 +888,21 @@ const seedData = async () => {
 
     console.log('Default transaction Orders seeded.');
     console.log('Database successfully seeded with realistic, populated demo profiles in Indian Rupees!');
-    process.exit(0);
+    if (require.main === module) {
+      process.exit(0);
+    }
   } catch (err) {
     console.error('Critical seeding error:', err);
-    process.exit(1);
+    if (require.main === module) {
+      process.exit(1);
+    } else {
+      throw err;
+    }
   }
 };
 
-seedData();
+if (require.main === module) {
+  seedData();
+} else {
+  module.exports = { seedData };
+}

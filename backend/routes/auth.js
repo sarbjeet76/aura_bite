@@ -108,4 +108,19 @@ router.get('/me', protect, async (req, res) => {
   }
 });
 
+// @desc    Seed the database with default restaurants, items, and users
+// @route   GET /api/auth/seed
+// @access  Public
+router.get('/seed', async (req, res) => {
+  try {
+    const { seedData } = require('../scripts/seed');
+    console.log('Production database seeding triggered via API...');
+    await seedData();
+    res.json({ success: true, message: 'Production database seeded successfully with gourmet restaurants and demo credentials!' });
+  } catch (error) {
+    console.error('API Seeding Error:', error);
+    res.status(500).json({ success: false, message: 'Seeding failed: ' + error.message });
+  }
+});
+
 module.exports = router;
