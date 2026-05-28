@@ -144,6 +144,48 @@ To run the automated tests:
 
 ---
 
+---
+
+## 🌐 Production Deployment Guide
+
+AuraBite is configured for production deployments, featuring an automatic **Axios Request Interceptor** and dynamic environment routing. Below is the step-by-step setup to host the backend on **Railway** and the frontend on **Vercel**.
+
+### 1. 🔌 Backend Deployment (Railway)
+Since AuraBite relies on persistent, real-time WebSocket connections (via Socket.io), the backend must be hosted on a persistent server platform like **Railway** (Vercel's serverless platform is stateless and does not support long-lived WebSockets).
+
+1. Sign in to [Railway](https://railway.app) (preferably using your GitHub account).
+2. Click **New Project** and select **Deploy from GitHub repo**.
+3. Select your `aura_bite` repository.
+4. Go to the **Settings** tab of your new service:
+   - Under **General**, set the **Root Directory** to `backend`.
+5. Go to the **Variables** tab and add the following:
+   - `MONGODB_URI`: Your production MongoDB Atlas connection string (or leave empty to let it fall back to our high-fidelity In-Memory Database!).
+   - `JWT_SECRET`: A secure, custom random string for signing JWT tokens.
+   - `NODE_ENV`: `production`
+6. Go to the **Networking** tab and click **Generate Domain** to get a public endpoint (e.g., `https://backend-production-xxxx.up.railway.app`). **Copy this URL**.
+
+---
+
+### 2. 💻 Frontend Deployment (Vercel)
+Vercel is optimized for building and serving lightning-fast static single-page React applications built with Vite.
+
+1. Sign in to [Vercel](https://vercel.com).
+2. Click **Add New** -> **Project**.
+3. Import your `aura_bite` GitHub repository.
+4. In the configuration dashboard:
+   - Set the **Framework Preset** to **Vite**.
+   - Set the **Root Directory** to `frontend`.
+5. Expand the **Environment Variables** accordion and add:
+   - **Name**: `VITE_API_URL`
+   - **Value**: The public Railway URL you copied in the previous step (e.g., `https://backend-production-xxxx.up.railway.app`). Ensure there is *no trailing slash* at the end of the URL.
+6. Click **Deploy**. Vercel will bundle the app and host it publicly (e.g., `https://aura-bite.vercel.app`).
+
+> [!NOTE]
+> **How Routing Works**: In production, our custom Axios interceptor registered in `main.jsx` automatically intercepts all outgoing API requests (originally targeting `http://localhost:5000`) and dynamically redirects them to the `VITE_API_URL` backend on Railway. In development, if `VITE_API_URL` is omitted, the app gracefully falls back to `http://localhost:5000` automatically.
+> Additionally, the `vercel.json` file in the frontend ensures React Router SPA client paths don't trigger `404 Not Found` page errors on refresh.
+
+---
+
 ## 📞 Support & Inquiries
 For platform feedback, demo assistance, or custom enquiries, reach out to the Gourmet Support team:
 - **Email**: [Sarbjeet@aurabite.com](mailto:Sarbjeet@aurabite.com)
