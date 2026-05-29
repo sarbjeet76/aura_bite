@@ -67,18 +67,7 @@ Welcome to **AuraBite**, a premium, high-fidelity full-stack single-page restaur
 
 ---
 
-## 👥 Demo Credentials & Profiles
 
-Use the following seeded accounts (currently populated in your cloud Atlas database) to test all three panels:
-
-| Portal Panel | User Role | Seed Email Address | Password | Key Functionality |
-| :--- | :--- | :--- | :--- | :--- |
-| **Admin Hub** | `admin` | `admin@aurabite.com` | `admin123` | System stats, users elevation, review hiding, support tickets |
-| **Seller Console** | `seller` | `seller1@aurabite.com` | `seller123` | Bella Italia menu management, order live-alert, operational hours |
-| **Seller Console** | `seller` | `seller2@aurabite.com` | `seller123` | Sakura Sushi menu management, order live-alert, operational hours |
-| **Customer Hub** | `customer` | `customer1@aurabite.com` | `customer123` | Place order, write reviews, structured address checkout, track status |
-
----
 
 ## 🛠️ Step-by-Step Setup & How to Run
 
